@@ -15,11 +15,11 @@ const Aside = () => {
         {/*navigation*/}
         <ul className="metismenu" id="menu">
           <li>
-            <NavLink to="/" activeClassName="mm-active">
+            <NavLink to="/dashboard" activeClassName="mm-active">
               <div className="parent-icon">
                 <span className="material-symbols-outlined">home</span>
               </div>
-              <div className="menu-title">Dashboard</div>
+              <div className="menu-title">Todo List</div>
             </NavLink>
           </li>
         </ul>

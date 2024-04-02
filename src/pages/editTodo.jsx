@@ -11,16 +11,34 @@ import {
   Card,
 } from "antd";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
-const AddTodo = () => {
+
+const EditTodo = () => {
+  const location = useLocation();
+  const todo = location.state.todo;
   const { Title } = Typography;
   const history = useHistory();
+  console.log(todo);
+  const [name, setName] = useState(todo.name);
+  const [description, setDescription] = useState(todo.description);
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  // Handle description input change
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
 
   const onFinish = (values) => {
+    console.log(values);
+
     const data = {
       name: values.name,
       description: values.description,
-      isDone: false,
     };
 
     const headers = {
@@ -29,12 +47,13 @@ const AddTodo = () => {
     };
 
     axios
-      .post("http://localhost:8080/api/v1/items", data, { headers })
+      .patch(`http://localhost:8080/api/v1/items/${todo.id}`, data, { headers })
       .then((res) => {
         history.push("/dashboard");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error);
       });
   };
 
@@ -44,7 +63,7 @@ const AddTodo = () => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={12}>
             <Card>
-              <Title level={5}>Create Todo Item</Title>
+              <Title level={5}>Edit Todo Item</Title>
               <Form name="myForm" onFinish={onFinish} labelAlign="top">
                 <Form.Item
                   label="Name of Todo Item"
@@ -57,7 +76,11 @@ const AddTodo = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Name" />
+                  <Input
+                    value={name}
+                    onChange={handleNameChange}
+                    placeholder="Name"
+                  />
                 </Form.Item>
                 <Form.Item
                   label="Description"
@@ -70,7 +93,11 @@ const AddTodo = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Description" />
+                  <Input
+                    value={description}
+                    onChange={handleDescriptionChange}
+                    placeholder="Description"
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" htmlType="submit">
@@ -86,4 +113,4 @@ const AddTodo = () => {
   );
 };
 
-export default AddTodo;
+export default EditTodo;

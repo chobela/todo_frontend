@@ -15,8 +15,21 @@ const Dashboard = () => {
   const history = useHistory();
   const { user } = useContext(userContext);
 
-  const handleClick = () => {
-    history.push("/quizzes");
+  const handleViewRecord = (todo) => {
+    // Navigate to another component and pass the record data
+    history.push("/editTodo", { todo });
+  };
+
+  const handleDelete = (todo) => {
+    axios
+      .delete(`http://localhost:8080/api/v1/items/${todo.id}`)
+      .then((res) => {
+        const newTodos = todos.filter((item) => item.id !== todo.id);
+        setTodos(newTodos);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const columns = [
@@ -54,12 +67,17 @@ const Dashboard = () => {
             <Button
               type="primary"
               onClick={() => {
-                history.push("/editTodo");
+                handleViewRecord(record);
               }}
             >
               <EditOutlined />
             </Button>
-            <Button type="danger">
+            <Button
+              type="danger"
+              onClick={() => {
+                handleDelete(record);
+              }}
+            >
               <DeleteOutlined />
             </Button>
           </Space>
@@ -97,7 +115,7 @@ const Dashboard = () => {
                   <Button
                     type="primary"
                     onClick={() => {
-                      history.push("/createTodo");
+                      history.push("/addTodo");
                     }}
                   >
                     <FileAddOutlined

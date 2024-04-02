@@ -31,7 +31,7 @@ const Login = () => {
         setUser(response.data.data.userInfo);
         localStorage.setItem("isAuthenticated", response.data.flag);
         localStorage.setItem("token", response.data.data.token);
-        history.push("/");
+        history.push("/dashboard");
       })
       .catch((error) => {
         console.log(error);
